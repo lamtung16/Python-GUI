@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
-import cv2
+import matplotlib.pyplot as plt
+from PIL import ImageTk, Image
+import numpy as np
 
 class MyGUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry("500x500")
+        self.root.geometry("500x300")
 
         self.menubar = tk.Menu(self.root)
         
@@ -37,11 +39,7 @@ class MyGUI:
         self.plot_button.pack()
         self.plot_button.place(x=300, y=10)
 
-        self.plotlabel = tk.Label(self.root, height=10, width=10)
-        self.plotlabel.pack()
-        self.plotlabel.place(x=10, y=40, relheight=0.5, relwidth=0.9)
-        self.plotlabel.config(bg= "gray")
-
+        
         self.root.mainloop()
     
 
@@ -63,6 +61,22 @@ class MyGUI:
     
 
     def plot(self):
-        img = cv2.imread("image.png")
+        t = int(self.textbox.get("1.0", "end-1c"))
+
+        x = np.arange(1.0, 20.0, 0.01)
+
+        # export image
+        plt.plot(x, np.power(x, t), 'k')
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        plt.savefig("image.pdf")
+        plt.savefig("image.png")
+        plt.close()
+
+        img = ImageTk.PhotoImage(Image.open("image.png").resize([400, 200]))
+        plotlabel = tk.Label(self.root, image=img)
+        plotlabel.pack()
+        plotlabel.place(x=20, y=60, relheight=0.7, relwidth=0.9)
+        plotlabel.image = img
 
 MyGUI()
